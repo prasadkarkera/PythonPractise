@@ -3,17 +3,38 @@
 # Given the list {1,{4,{6}}} the function should return 27 (one 1 at depth 1, one 4 at depth 2, and one 6 at depth 3)
 
 
-def reverse_depth_sum(input, level, sum):
+def depth_sum(input, level, sum):
 
     for i in range(len(input)):
         if type(input[i]) is list:
-            sum = reverse_depth_sum(input[i], level + 1, sum)
+            sum = depth_sum(input[i], level + 1, sum)
         else:
             sum += (input[i] * level)
 
     return sum
 
 
-input = [[1, 1], 2, [1, 1]]
-assert reverse_depth_sum(input, 1, 0) == 10
-assert reverse_depth_sum([1,[4, [6]]] , 1, 0) == 27
+def get_depth(input, depth):
+    for i in range(len(input)):
+        if type(input[i]) is list:
+            depth = get_depth(input[i], depth + 1)
+
+    return depth
+
+
+def reverse_depth_sum(input, level, sum):
+    for i in range(len(input)):
+        if type(input[i]) is list:
+            sum = reverse_depth_sum(input[i], level - 1, sum)
+        else:
+            sum += (input[i] * level)
+
+    return sum
+
+
+assert depth_sum([[1, 1], 2, [1, 1]], 1, 0) == 10
+assert depth_sum([1,[4, [6]]], 1, 0) == 27
+
+input = [1, [4, [6]]]
+depth = get_depth(input, 1)
+assert reverse_depth_sum(input, depth, 0) == 17
